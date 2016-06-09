@@ -98,6 +98,10 @@
     .attr({width: window.innerWidth, height: window.innerHeight})
     .style('background-color', '#1c2733');
   
+    window.onresize = function (e) {
+      svg.attr({width: window.innerWidth, height: window.innerHeight});
+    }
+  
   var pusher = new Pusher('79e8e05ea522377ba6db');
   var panoptes = pusher.subscribe('panoptes');
   var ouroboros = pusher.subscribe('ouroboros');
