@@ -4,16 +4,30 @@
 <script src="js/d3.min.js"></script>
 <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
 <style>
-  p {
+  #header {
     font-family: sans-serif;
-    font-size: 2em;
     position: absolute;
     left: 10%;
     color: #fff;
     z-index: 10;
-  } 
+  }
+  #header h1 {
+    font-size: 2em;
+  }
+  .pan {
+    color: #f57;
+  }
+  .our {
+    color: #75f;
+  }
 </style>
-<p>Listen to the Zooniverse.</p>
+<div id="header">
+  <h1>Listen to the Zooniverse.</h1>
+  <ul>
+    <li class="pan">Panoptes</li>
+    <li class="our">Ouroboros</li>
+  </ul>
+</div>
 <div id="canvas"></div>
 <script>
   var celesta = [];
