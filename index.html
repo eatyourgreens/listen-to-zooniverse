@@ -110,13 +110,13 @@
     var project = parseInt(data.project_id);
     var index = project % (clav.length - 1);
     clav[index].play();
-    draw_circle(index, '#f57');
+    draw_circle(index + 10, '#f57');
     // console.log( "panoptes classification", data );
   });
   panoptes.bind('comment', function (data){
     var index = Math.round(Math.random() * (swells.length - 1));
     swells[index].play();
-    draw_circle(index*10, '#999');
+    draw_circle(10 + index * 10, '#999');
     console.log( "panoptes comment", data );
   });
   
@@ -125,13 +125,13 @@
     index = index % (celesta.length - 1);
 
     celesta[index].play();
-    draw_circle(index, '#75f');
+    draw_circle(index + 10, '#75f');
     // console.log( "ouroboros classification", data );
   });
   ouroboros.bind('comment', function (data){
     var index = Math.round(Math.random() * (swells.length - 1));
     swells[index].play();
-    draw_circle(index*10, '#fff');
+    draw_circle(10 + index * 10, '#fff');
     console.log( "ouroboros comment", data );
   });
   
