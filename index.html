@@ -16,9 +16,15 @@
   }
   .pan {
     color: #f57;
+    opacity: .7;
   }
   .our {
     color: #75f;
+    opacity: .7;
+  }
+  .talk {
+    color: #fff;
+    opacity: .7;
   }
 </style>
 <div id="header">
@@ -26,6 +32,7 @@
   <ul>
     <li class="pan">Panoptes</li>
     <li class="our">Ouroboros</li>
+    <li class="talk">Talk comments</li>
   </ul>
 </div>
 <div id="canvas"></div>
@@ -86,7 +93,7 @@
           onload : sound_load(),
       }))
   }
-  
+
   var svg = d3.select("#canvas").append("svg")
     .attr({width: window.innerWidth, height: window.innerHeight})
     .style('background-color', '#1c2733');
@@ -98,19 +105,20 @@
   panoptes.bind('classification', function (data){
     var project = parseInt(data.project_id);
     var index = project % (clav.length - 1);
-    console.log( 'panoptes', index)
     clav[index].play();
     draw_circle(index, '#f57');
     // console.log( "panoptes classification", data );
   });
   panoptes.bind('comment', function (data){
-    // console.log( "panoptes comment", data );
+    var index = Math.round(Math.random() * (swells.length - 1));
+    swells[index].play();
+    draw_circle(index*10, '#999');
+    console.log( "panoptes comment", data );
   });
   
   ouroboros.bind('classification', function (data){
     var index = (data.project + data.subjects + data.user_name).length;
     index = index % (celesta.length - 1);
-    console.log( 'ouroboros', index )
 
     celesta[index].play();
     draw_circle(index, '#75f');
@@ -120,7 +128,7 @@
     var index = Math.round(Math.random() * (swells.length - 1));
     swells[index].play();
     draw_circle(index*10, '#fff');
-    // console.log( "ouroboros comment", data );
+    console.log( "ouroboros comment", data );
   });
   
   draw_circle = function (size, edit_color) {
