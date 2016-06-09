@@ -77,9 +77,9 @@ var panoptes = pusher.subscribe('panoptes');
 var ouroboros = pusher.subscribe('ouroboros');
 
 panoptes.bind('classification', function(data) {
-  var project = parseInt(data.project_id) + parseInt(data.workflow_id) + parseInt(data.user_id) + parseInt(data.classification_id);
+  var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
+  var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (clav.length - 1);
-  console.log( index )
   clav[index].play();
   draw_circle(index + 10, '#f57');
   // console.log( "panoptes classification", data );
