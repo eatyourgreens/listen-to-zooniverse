@@ -1,6 +1,6 @@
 {
   "name": "listen-to-zooniverse",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Audio visualisation of the Zooniverse event streams",
   "main": "index.html",
   "dependencies": {

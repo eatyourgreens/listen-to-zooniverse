@@ -82,7 +82,9 @@
   var ouroboros = pusher.subscribe('ouroboros');
   
   panoptes.bind('classification', function (data){
-    var index = Math.round(Math.random() * (clav.length - 1));
+    var project = parseInt(data.project_id);
+    var index = project % (clav.length - 1);
+    console.log( 'panoptes', index)
     clav[index].play();
     draw_circle(index, '#f57');
     // console.log( "panoptes classification", data );
@@ -92,7 +94,9 @@
   });
   
   ouroboros.bind('classification', function (data){
-    var index = Math.round(Math.random() * (celesta.length - 1));
+    var index = (data.project + data.subjects + data.user_name).length;
+    index = index % (celesta.length - 1);
+    console.log( 'ouroboros', index )
 
     celesta[index].play();
     draw_circle(index, '#75f');
