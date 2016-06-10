@@ -96,7 +96,7 @@ ouroboros.bind('classification', function(data) {
   index = index % (celesta.length - 1);
 
   celesta[index].play();
-  draw_circle(index + 10, '#75f');
+  draw_circle(index + 10, '#75f', data.project);
   // console.log( "ouroboros classification", data );
 });
 ouroboros.bind('comment', function(data) {
