@@ -81,7 +81,7 @@ panoptes.bind('classification', function(data) {
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (clav.length - 1);
   clav[index].play();
-  draw_circle(index + 10, '#f57');
+  draw_circle(index + 10, '#f57', data.project_id);
   // console.log( "panoptes classification", data );
 });
 panoptes.bind('comment', function(data) {
