@@ -87,7 +87,7 @@ panoptes.bind('classification', function(data) {
 panoptes.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#999');
+  draw_circle(10 + index * 10, '#777');
   console.log("panoptes comment", data);
 });
 
@@ -102,11 +102,11 @@ ouroboros.bind('classification', function(data) {
 ouroboros.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#fff');
+  draw_circle(10 + index * 10, '#777', data.body);
   console.log("ouroboros comment", data);
 });
 
-draw_circle = function(size, edit_color) {
+draw_circle = function(size, edit_color, label) {
   var x = Math.random() * (window.innerWidth - size) + size;
   var y = Math.random() * (window.innerHeight - size) + size;
 
@@ -136,4 +136,17 @@ draw_circle = function(size, edit_color) {
       circle_group.remove();
     })
     .remove();
+  
+    if (label) {
+      var label = circle_group.append('text')
+        .text(label)
+        .classed('comment-body', true)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#fd6')
+        .transition()
+        .delay(1000)
+        .style('opacity', 0)
+        .duration(30000)
+        .remove();
+    }
 }
