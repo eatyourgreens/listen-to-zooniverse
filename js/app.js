@@ -83,6 +83,25 @@ projects.forEach(function (list) {
   });
 });
 
+var ouroboros_projects = {};
+
+(function loadProjects() {
+  // List of identifiers to ignore (i.e. Not show)
+  ignore_these = ["m83", "impossible_line", "leaf", "cancer_gene_runner", "galaxy_zoo_starburst", "galaxy_zoo_quiz"]
+
+  // Get .ist of projects from API annd create items for display
+  var request = new XMLHttpRequest();
+  request.open('GET', "https://api.zooniverse.org/projects/list");
+  request.send();
+  request.onload = function (e) {
+    var projects = JSON.parse( this.responseText);
+    projects.forEach( function (project){
+      ouroboros_projects[project.name] = project.display_name;
+    });
+  };
+})();
+
+
 var pusher = new Pusher('79e8e05ea522377ba6db');
 var panoptes = pusher.subscribe('panoptes');
 var ouroboros = pusher.subscribe('ouroboros');
@@ -108,7 +127,7 @@ ouroboros.bind('classification', function(data) {
   index = index % (celesta.length - 1);
 
   celesta[index].play();
-  draw_circle(index + 10, '#75f', data.project);
+  draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
   // console.log( "ouroboros classification", data );
 });
 ouroboros.bind('comment', function(data) {
