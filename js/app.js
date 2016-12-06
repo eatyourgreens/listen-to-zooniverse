@@ -152,7 +152,7 @@ panoptes.bind('classification', function(data) {
 });
 talk.bind('comment', function(data) {
   var index = Math.round(Math.random() * (santa.length - 1));
-  santa[index].play();
+  xmas[index].play();
   draw_circle(10 + index * 10, '#777', panoptes_projects[data.project_id].display_name);
   console.log("panoptes comment", data);
 });
@@ -161,7 +161,7 @@ ouroboros.bind('classification', function(data) {
   var index = (data.project + data.subjects + data.user_name).length;
   index = index % (xmas.length - 1);
 
-  xmas[index].play();
+  bells[index].play();
   draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
   // console.log( "ouroboros classification", data );
 });
