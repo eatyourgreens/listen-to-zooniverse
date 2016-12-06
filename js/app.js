@@ -1,6 +1,7 @@
 var celesta = [];
 var clav = [];
 var swells = [];
+var santa = [];
 
 var body_background_color = '#f8f8f8',
   body_text_color = '#000',
@@ -12,13 +13,13 @@ var body_background_color = '#f8f8f8',
   edit_color = '#fff';
 
 var loaded_sounds = 0;
-var sound_totals = 51;
+var sound_totals = 52;
 var sound_load = function(r) {
   loaded_sounds += 1
   if (loaded_sounds == sound_totals) {
     all_loaded = true
     console.log('Loading complete')
-    console.log(celesta);
+    console.log(santa);
   } else {
     // console.log('Loading : ' + loaded_sounds + ' files out of ' + sound_totals)
   }
@@ -53,6 +54,15 @@ for (var i = 1; i <= 3; i++) {
     urls: ['sounds/swells/swell' + i + '.ogg',
       'sounds/swells/swell' + i + '.mp3'
     ],
+    volume: 1,
+    onload: sound_load(),
+  }))
+}
+
+// load SANTA
+for (var i = 1; i <= 1; i++) {
+  santa.push(new Howl({
+    urls: ['sounds/santa/santa' + i + '.mp3'],
     volume: 1,
     onload: sound_load(),
   }))
@@ -115,29 +125,29 @@ var talk = pusher.subscribe('talk');
 panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
-  var index = project % (clav.length - 1);
-  clav[index].play();
+  var index = project % (santa.length - 1);
+  santa[index].play();
   draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
-  var index = Math.round(Math.random() * (swells.length - 1));
-  swells[index].play();
+  var index = Math.round(Math.random() * (santa.length - 1));
+  santa[index].play();
   draw_circle(10 + index * 10, '#777', panoptes_projects[data.project_id].display_name);
   console.log("panoptes comment", data);
 });
 
 ouroboros.bind('classification', function(data) {
   var index = (data.project + data.subjects + data.user_name).length;
-  index = index % (celesta.length - 1);
+  index = index % (santa.length - 1);
 
-  celesta[index].play();
+  santa[index].play();
   draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
   // console.log( "ouroboros classification", data );
 });
 ouroboros.bind('comment', function(data) {
-  var index = Math.round(Math.random() * (swells.length - 1));
-  swells[index].play();
+  var index = Math.round(Math.random() * (santa.length - 1));
+  santa[index].play();
   draw_circle(10 + index * 10, '#777', data.body);
   console.log("ouroboros comment", data);
 });
