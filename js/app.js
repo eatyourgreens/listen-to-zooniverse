@@ -15,7 +15,7 @@ var body_background_color = '#f8f8f8',
   edit_color = '#fff';
 
 var loaded_sounds = 0;
-var sound_totals = 72;
+var sound_totals = 89;
 var sound_load = function(r) {
   loaded_sounds += 1
   if (loaded_sounds == sound_totals) {
@@ -71,7 +71,7 @@ for (var i = 1; i <= 2; i++) {
 }
 
 // load Christmas
-for (var i = 1; i <= 10; i++) {
+for (var i = 1; i <= 15; i++) {
   xmas.push(new Howl({
     urls: ['sounds/xmas/xmas' + i + '.mp3'],
     volume: 1,
