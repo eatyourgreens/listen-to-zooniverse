@@ -4,6 +4,7 @@ var swells = [];
 var santa = [];
 var xmas = [];
 var bells = [];
+var FESTIVITY = .25;
 
 var body_background_color = '#f8f8f8',
   body_text_color = '#000',
@@ -146,7 +147,7 @@ panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (bells.length - 1);
-  if (Math.random() > 0.1) {
+  if (Math.random() > FESTIVITY) {
     bells[index].play();
   } else {
     xmas[Math.round(Math.random() * (xmas.length - 1))].play();
@@ -165,7 +166,12 @@ ouroboros.bind('classification', function(data) {
   var index = (data.project + data.subjects + data.user_name).length;
   index = index % (bells.length - 1);
 
-  bells[index].play();
+  if (Math.random() > FESTIVITY) {
+    bells[index].play();
+  } else {
+    santa[Math.round(Math.random() * (santa.length - 1))].play();
+  }
+  
   draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
   // console.log( "ouroboros classification", data );
 });
