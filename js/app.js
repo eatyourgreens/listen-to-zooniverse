@@ -146,12 +146,16 @@ panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (bells.length - 1);
-  bells[index].play();
+  if (Math.random() > 0.1) {
+    bells[index].play();
+  } else {
+    xmas[Math.round(Math.random() * (xmas.length - 1))].play();
+  }
   draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
-  var index = Math.round(Math.random() * (santa.length - 1));
+  var index = Math.round(Math.random() * (xmas.length - 1));
   xmas[index].play();
   draw_circle(10 + index * 10, '#777', panoptes_projects[data.project_id].display_name);
   console.log("panoptes comment", data);
@@ -159,7 +163,7 @@ talk.bind('comment', function(data) {
 
 ouroboros.bind('classification', function(data) {
   var index = (data.project + data.subjects + data.user_name).length;
-  index = index % (xmas.length - 1);
+  index = index % (bells.length - 1);
 
   bells[index].play();
   draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
