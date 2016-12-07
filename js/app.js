@@ -155,8 +155,8 @@ panoptes.bind('classification', function(data) {
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
-  var index = Math.round(Math.random() * (xmas.length - 1));
-  xmas[index].play();
+  var index = Math.round(Math.random() * (santa.length - 1));
+  santa[index].play();
   draw_circle(10 + index * 10, '#777', panoptes_projects[data.project_id].display_name);
   console.log("panoptes comment", data);
 });
