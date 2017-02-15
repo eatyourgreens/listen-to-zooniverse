@@ -143,6 +143,7 @@ ouroboros.bind('comment', function(data) {
 });
 
 draw_circle = function(size, edit_color, label) {
+  console.log(label);
   var x = Math.random() * (window.innerWidth - size) + size;
   var y = Math.random() * (window.innerHeight - size) + size;
 
