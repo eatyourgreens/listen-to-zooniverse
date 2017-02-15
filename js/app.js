@@ -123,7 +123,7 @@ panoptes.bind('classification', function(data) {
 talk.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#777', panoptes_projects[data.project_id].display_name);
+  draw_circle(10 + index * 10, '#777', data.body);
   console.log("panoptes comment", data);
 });
 
