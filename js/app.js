@@ -117,7 +117,7 @@ panoptes.bind('classification', function(data) {
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (clav.length - 1);
   clav[index].play();
-  draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name);
+  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
