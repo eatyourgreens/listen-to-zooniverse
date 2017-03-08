@@ -76,7 +76,7 @@ var panoptes_projects = {};
 
 (function loadPanoptesProjects() {
   var request = new XMLHttpRequest();
-  request.open('GET', "https://www.zooniverse.org/api/projects/?page=1&page_size=50&launch_approved=true");
+  request.open('GET', "https://www.zooniverse.org/api/projects/?page=1&page_size=100&launch_approved=true");
   request.setRequestHeader('Accept', 'application/vnd.api+json; version=1');
   request.setRequestHeader('Content-Type', 'application/json');
   request.send();
