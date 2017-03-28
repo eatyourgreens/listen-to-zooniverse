@@ -180,6 +180,7 @@ draw_circle = function(size, edit_color, label, image_url) {
     if (image_url) {
       image_url = image_url.replace('https://', '');
       image_url = image_url.replace('http://', '');
+      image_url = image_url.replace('static.zooniverse.org/', '');
       var image = circle_group.append('image')
         .attr('href', 'https://thumbnails.zooniverse.org/100x150/' + image_url)
         .attr('transform', 'translate(-50, -50)')
