@@ -116,14 +116,17 @@ panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   var index = project % (clav.length - 1);
+  var image = data.subject_urls[0];
+  var image_type = Object.keys(image)[0]
+  var image = image[image_type] || '';
   clav[index].play();
-  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name);
+  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name, image);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#777', data.body);
+  draw_circle(10 + index * 10, '#777', data.body, '');
   console.log("panoptes comment", data);
 });
 
@@ -132,17 +135,17 @@ ouroboros.bind('classification', function(data) {
   index = index % (celesta.length - 1);
 
   celesta[index].play();
-  draw_circle(index + 10, '#75f', ouroboros_projects[data.project]);
+  draw_circle(index + 10, '#75f', ouroboros_projects[data.project], '');
   // console.log( "ouroboros classification", data );
 });
 ouroboros.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#777', data.body);
+  draw_circle(10 + index * 10, '#777', data.body, '');
   console.log("ouroboros comment", data);
 });
 
-draw_circle = function(size, edit_color, label) {
+draw_circle = function(size, edit_color, label, image_url) {
   console.log(label);
   var x = Math.random() * (window.innerWidth - size) + size;
   var y = Math.random() * (window.innerHeight - size) + size;
@@ -173,6 +176,18 @@ draw_circle = function(size, edit_color, label) {
       circle_group.remove();
     })
     .remove();
+
+    if (image_url) {
+      image_url = image_url.replace('https://', '');
+      image_url = image_url.replace('http://', '');
+      var image = circle_group.append('image')
+        .attr('href', 'https://thumbnails.zooniverse.org/100x150/' + image_url)
+        .attr('transform', 'translate(-50, -50)')
+        .transition()
+        .duration(30000)
+        .style('opacity', 0)
+        .remove()
+    }
   
     if (label) {
       var label = circle_group.append('text')
