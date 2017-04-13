@@ -115,13 +115,15 @@ var talk = pusher.subscribe('talk');
 panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
-  var colour = project % 16777216;
+  var red = parseInt(data.project_id) % 256;
+  var green = parseInt(data.workflow_id) % 256;
+  var blue = parseInt(user_id) % 256;
   var index = project % (clav.length - 1);
   var image = data.subject_urls[0];
   var image_type = Object.keys(image)[0]
   var image = image[image_type] || '';
   clav[index].play();
-  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#' + colour.toString(16), panoptes_projects[data.project_id].display_name, image);
+  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), panoptes_projects[data.project_id].display_name, image);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
