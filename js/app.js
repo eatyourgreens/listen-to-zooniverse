@@ -115,33 +115,41 @@ var talk = pusher.subscribe('talk');
 panoptes.bind('classification', function(data) {
   var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
+  var colour = project % 16777216;
   var index = project % (clav.length - 1);
   var image = data.subject_urls[0];
   var image_type = Object.keys(image)[0]
   var image = image[image_type] || '';
   clav[index].play();
-  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#f57', panoptes_projects[data.project_id].display_name, image);
+  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#' + colour.toString(16), panoptes_projects[data.project_id].display_name, image);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
+  var colour = data.project_id % 16777216;
   swells[index].play();
-  draw_circle(10 + index * 10, '#777', data.body, '');
+  draw_circle(10 + index * 10, '#' + colour.toString(16), data.body, '');
   console.log("panoptes comment", data);
 });
 
 ouroboros.bind('classification', function(data) {
   var index = (data.project + data.subjects + data.user_name).length;
+  var red = data.project.length % 256;
+  var green = data.subjects.length % 256;
+  var blue = data.user_name.length % 256
   index = index % (celesta.length - 1);
 
   celesta[index].play();
-  draw_circle(index + 10, '#75f', ouroboros_projects[data.project], '');
+  draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), ouroboros_projects[data.project], '');
   // console.log( "ouroboros classification", data );
 });
 ouroboros.bind('comment', function(data) {
+  var red = data.body.length % 256;
+  var green = data.zooniverse_id.length % 256;
+  var blue = data.user_zooniverse_id.length % 256;
   var index = Math.round(Math.random() * (swells.length - 1));
   swells[index].play();
-  draw_circle(10 + index * 10, '#777', data.body, '');
+  draw_circle(10 + index * 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), data.body, '');
   console.log("ouroboros comment", data);
 });
 
