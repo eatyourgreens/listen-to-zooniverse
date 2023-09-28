@@ -74,18 +74,17 @@ window.onresize = function(e) {
 
 var panoptes_projects = {};
 
-(function loadPanoptesProjects() {
-  var request = new XMLHttpRequest();
-  request.open('GET', "https://www.zooniverse.org/api/projects/?page=1&page_size=200&launch_approved=true&cards=true");
-  request.setRequestHeader('Accept', 'application/vnd.api+json; version=1');
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send();
-  request.onload = function (e) {
-    var projects = JSON.parse( this.responseText ).projects;
-    projects.forEach( function (project) {
-      panoptes_projects[project.id] = project;
-    })
-  }
+(async function loadPanoptesProjects() {
+  const response = await fetch("https://www.zooniverse.org/api/projects/?page=1&page_size=200&launch_approved=true&cards=true", {
+    headers: {
+      Accept: 'application/vnd.api+json; version=1',
+      'Content-Type': 'application/json'
+    }
+  });
+  const body = await response.json();
+  body.projects.forEach(function (project) {
+    panoptes_projects[project.id] = project;
+  })
 })();
 
 var ouroboros_projects = {};
@@ -106,24 +105,41 @@ var ouroboros_projects = {};
   };
 })();
 
+async function fetchProject(project_id) {
+  const response = await fetch(`https://www.zooniverse.org/api/projects/${project_id}`, {
+    headers: {
+      Accept: 'application/vnd.api+json; version=1',
+      'Content-Type': 'application/json'
+    }
+  });
+  const body = await response.json();
+  const [ project ] = body.projects;
+  return project;
+}
+
+async function getProject(project_id) {
+  const project = panoptes_projects[project_id];
+  return project || await fetchProject(project_id);
+}
 
 var pusher = new Pusher('79e8e05ea522377ba6db');
 var panoptes = pusher.subscribe('panoptes');
 var ouroboros = pusher.subscribe('ouroboros');
 var talk = pusher.subscribe('talk');
 
-panoptes.bind('classification', function(data) {
-  var user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
-  var project = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
-  var red = parseInt(data.project_id) % 256;
-  var green = parseInt(data.workflow_id) % 256;
-  var blue = parseInt(user_id) % 256;
-  var index = project % (clav.length - 1);
-  var image = data.subject_urls[0];
-  var image_type = Object.keys(image)[0]
-  var image = image[image_type] || '';
+panoptes.bind('classification', async function(data) {
+  const user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
+  const projectIndex = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
+  const red = parseInt(data.project_id) % 256;
+  const green = parseInt(data.workflow_id) % 256;
+  const blue = parseInt(user_id) % 256;
+  const index = projectIndex % (clav.length - 1);
+  let image = data.subject_urls[0];
+  const image_type = Object.keys(image)[0]
+  image = image[image_type] || '';
   clav[index].play();
-  !!panoptes_projects[data.project_id] && draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), panoptes_projects[data.project_id].display_name, image);
+  const project = await fetchProject(data.project_id);
+  !!project && draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), project.display_name, image);
   // console.log( "panoptes classification", data );
 });
 talk.bind('comment', function(data) {
