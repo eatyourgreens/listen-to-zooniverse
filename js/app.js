@@ -114,6 +114,7 @@ async function fetchProject(project_id) {
   });
   const body = await response.json();
   const [ project ] = body.projects;
+  panoptes_projects[project.id] = project;
   return project;
 }
 
