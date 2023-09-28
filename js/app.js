@@ -1,3 +1,37 @@
+// https://stackoverflow.com/a/24785497/10951669
+function wrap(text, width) {
+  text.each(function () {
+    var text = d3.select(this),
+      words = text.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      x = text.attr("x"),
+      y = text.attr("y"),
+      dy = 0, //parseFloat(text.attr("dy")),
+      tspan = text.text(null)
+        .append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan")
+          .attr("x", x)
+          .attr("y", y)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .text(word);
+      }
+    }
+  });
+}
+
 var celesta = [];
 var clav = [];
 var swells = [];
@@ -223,6 +257,9 @@ draw_circle = function(size, edit_color, label, image_url) {
         .classed('comment-body', true)
         .attr('text-anchor', 'middle')
         .attr('fill', '#fd6')
+        .attr("x", 0)
+        .attr("y", 0)
+        .call(wrap, 250)
         .transition()
         .delay(1000)
         .style('opacity', 0)
