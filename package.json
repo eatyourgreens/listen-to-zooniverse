@@ -11,5 +11,8 @@
     "start": "node server.js"
   },
   "author": "Jim O'Donnell <jim@zooniverse.org>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@zachleat/snow-fall": "^1.0.2"
+  }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <title>Listen to the Zooniverse</title>
+<script type="module" src="node_modules/@zachleat/snow-fall/snow-fall.js"></script>
 <script src="js/howler.min.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
@@ -13,6 +14,10 @@
   }
   #header h1 {
     font-size: 2em;
+  }
+  #canvas {
+    height: 100vh;
+    width: 100vw;
   }
   .pan {
     color: #f57;
@@ -31,6 +36,7 @@
     color: #fff;
   }
 </style>
+<snow-fall></snow-fall>
 <div id="header">
   <h1>Listen to the Zooniverse.</h1>
 </div>
