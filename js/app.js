@@ -231,7 +231,7 @@ draw_circle = function(size, edit_color, label, image_url) {
   var circle = circle_group.append('circle')
     .attr('r', size)
     .transition()
-    .duration(60000)
+    .duration(5000)
     .style('opacity', 0)
     .each('end', function() {
       circle_group.remove();
@@ -243,10 +243,10 @@ draw_circle = function(size, edit_color, label, image_url) {
       image_url = image_url.replace('http://', '');
       image_url = image_url.replace('static.zooniverse.org/', '');
       var image = circle_group.append('image')
-        .attr('href', 'https://thumbnails.zooniverse.org/100x150/' + image_url)
-        .attr('transform', 'translate(-50, -50)')
+        .attr('href', 'https://thumbnails.zooniverse.org/50x75/' + image_url)
+        .attr('transform', 'translate(-25, -25)')
         .transition()
-        .duration(30000)
+        .duration(5000)
         .style('opacity', 0)
         .remove()
     }
@@ -263,7 +263,7 @@ draw_circle = function(size, edit_color, label, image_url) {
         .transition()
         .delay(1000)
         .style('opacity', 0)
-        .duration(30000)
+        .duration(10000)
         .remove();
     }
 }
