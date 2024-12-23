@@ -13,6 +13,6 @@
   "author": "Jim O'Donnell <jim@zooniverse.org>",
   "license": "ISC",
   "dependencies": {
-    "@zachleat/snow-fall": "^1.0.2"
+    "@zachleat/snow-fall": "^1.0.3"
   }
 }
