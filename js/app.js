@@ -157,12 +157,7 @@ async function getProject(project_id) {
   return project || await fetchProject(project_id);
 }
 
-var pusher = new Pusher('79e8e05ea522377ba6db');
-var panoptes = pusher.subscribe('panoptes');
-var ouroboros = pusher.subscribe('ouroboros');
-var talk = pusher.subscribe('talk');
-
-panoptes.bind('classification', async function(data) {
+async function onPanoptesClassification(data) {
   const user_id = ( !!data.user_id ) ? parseInt( data.user_id ) : 0;
   const projectIndex = parseInt(data.project_id) + parseInt(data.workflow_id) + user_id + parseInt(data.classification_id);
   const red = parseInt(data.project_id) % 256;
@@ -176,16 +171,17 @@ panoptes.bind('classification', async function(data) {
   const project = await fetchProject(data.project_id);
   !!project && draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), project.display_name, image);
   // console.log( "panoptes classification", data );
-});
-talk.bind('comment', function(data) {
+}
+
+function onTalkComment(data) {
   var index = Math.round(Math.random() * (swells.length - 1));
   var colour = data.project_id % 16777216;
   swells[index].play();
   draw_circle(10 + index * 10, '#' + colour.toString(16), data.body, '');
   console.log("panoptes comment", data);
-});
+}
 
-ouroboros.bind('classification', function(data) {
+function onOuroborosClassification(data) {
   var index = (data.project + data.subjects + data.user_name).length;
   var red = data.project.length % 256;
   var green = data.subjects.length % 256;
@@ -195,8 +191,9 @@ ouroboros.bind('classification', function(data) {
   celesta[index].play();
   draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), ouroboros_projects[data.project], '');
   // console.log( "ouroboros classification", data );
-});
-ouroboros.bind('comment', function(data) {
+}
+
+function onOuroborosComment(data) {
   var red = data.body.length % 256;
   var green = data.zooniverse_id.length % 256;
   var blue = data.user_zooniverse_id.length % 256;
@@ -204,7 +201,59 @@ ouroboros.bind('comment', function(data) {
   swells[index].play();
   draw_circle(10 + index * 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), data.body, '');
   console.log("ouroboros comment", data);
-});
+}
+
+function handlePusherEvent(channel, event, data) {
+  if (channel === 'panoptes' && event === 'classification') {
+    onPanoptesClassification(data);
+  } else if (channel === 'talk' && event === 'comment') {
+    onTalkComment(data);
+  } else if (channel === 'ouroboros' && event === 'classification') {
+    onOuroborosClassification(data);
+  } else if (channel === 'ouroboros' && event === 'comment') {
+    onOuroborosComment(data);
+  }
+}
+
+function connectDirectPusher() {
+  var pusher = new Pusher('79e8e05ea522377ba6db');
+  var panoptes = pusher.subscribe('panoptes');
+  var ouroboros = pusher.subscribe('ouroboros');
+  var talk = pusher.subscribe('talk');
+
+  panoptes.bind('classification', function (data) {
+    handlePusherEvent('panoptes', 'classification', data);
+  });
+  talk.bind('comment', function (data) {
+    handlePusherEvent('talk', 'comment', data);
+  });
+  ouroboros.bind('classification', function (data) {
+    handlePusherEvent('ouroboros', 'classification', data);
+  });
+  ouroboros.bind('comment', function (data) {
+    handlePusherEvent('ouroboros', 'comment', data);
+  });
+}
+
+function connectSharedPusher() {
+  var worker = new SharedWorker('js/pusher-shared-worker.js');
+  worker.port.start();
+  worker.port.addEventListener('message', function (event) {
+    var payload = event.data || {};
+    handlePusherEvent(payload.channel, payload.event, payload.data);
+  });
+}
+
+if (typeof SharedWorker === 'function') {
+  try {
+    connectSharedPusher();
+  } catch (error) {
+    console.warn('SharedWorker unavailable, using direct Pusher connection', error);
+    connectDirectPusher();
+  }
+} else {
+  connectDirectPusher();
+}
 
 draw_circle = function(size, edit_color, label, image_url) {
   console.log(label);
