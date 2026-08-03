@@ -10,19 +10,21 @@ const trustedScriptURL = scriptPolicy.createScriptURL(
 );
 importScripts(trustedScriptURL);
 
-var ports = [];
-var initialized = false;
+let ports = [];
+let initialized = false;
 
 function broadcast(channel, event, data) {
-  ports.forEach(function (port) {
+  ports = ports.filter(function (port) {
     try {
       port.postMessage({
         channel: channel,
         event: event,
         data: data
       });
+      return true;
     } catch (error) {
       // Port may be closed in another tab; ignore and continue.
+      return false;
     }
   });
 }
@@ -31,9 +33,9 @@ function initializePusher() {
   if (initialized) return;
   initialized = true;
 
-  var pusher = new Pusher('79e8e05ea522377ba6db');
-  var panoptes = pusher.subscribe('panoptes');
-  var talk = pusher.subscribe('talk');
+  const pusher = new Pusher('79e8e05ea522377ba6db');
+  const panoptes = pusher.subscribe('panoptes');
+  const talk = pusher.subscribe('talk');
 
   panoptes.bind('classification', function (data) {
     broadcast('panoptes', 'classification', data);
@@ -44,7 +46,7 @@ function initializePusher() {
 }
 
 onconnect = function (event) {
-  var port = event.ports[0];
+  const port = event.ports[0];
   ports.push(port);
   port.start();
   initializePusher();

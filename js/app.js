@@ -45,9 +45,9 @@ var body_background_color = '#f8f8f8',
   anon_color = 'rgb(46, 204, 113)',
   edit_color = '#fff';
 
-var loaded_sounds = 0;
-var sound_totals = 51;
-var sound_load = function(r) {
+let loaded_sounds = 0;
+const sound_totals = 51;
+const sound_load = function(r) {
   loaded_sounds += 1
   if (loaded_sounds == sound_totals) {
     all_loaded = true
@@ -59,7 +59,7 @@ var sound_load = function(r) {
 }
 
 // load celesta and clav sounds
-for (var i = 1; i <= 24; i++) {
+for (let i = 1; i <= 24; i++) {
   if (i > 9) {
     fn = 'c0' + i;
   } else {
@@ -82,7 +82,7 @@ for (var i = 1; i <= 24; i++) {
 }
 
 // load swell sounds
-for (var i = 1; i <= 3; i++) {
+for (let i = 1; i <= 3; i++) {
   swells.push(new Howl({
     urls: ['sounds/swells/swell' + i + '.ogg',
       'sounds/swells/swell' + i + '.mp3'
@@ -156,8 +156,8 @@ async function onPanoptesClassification(data) {
 }
 
 function onTalkComment(data) {
-  var index = Math.round(Math.random() * (swells.length - 1));
-  var colour = data.project_id % 16777216;
+  const index = Math.round(Math.random() * (swells.length - 1));
+  const colour = data.project_id % 16777216;
   swells[index].play();
   draw_circle(10 + index * 10, '#' + colour.toString(16), data.body, '');
   console.log("Talk comment", data);
@@ -172,9 +172,9 @@ function handlePusherEvent(channel, event, data) {
 }
 
 function connectDirectPusher() {
-  var pusher = new Pusher('79e8e05ea522377ba6db');
-  var panoptes = pusher.subscribe('panoptes');
-  var talk = pusher.subscribe('talk');
+  const pusher = new Pusher('79e8e05ea522377ba6db');
+  const panoptes = pusher.subscribe('panoptes');
+  const talk = pusher.subscribe('talk');
 
   panoptes.bind('classification', function (data) {
     handlePusherEvent('panoptes', 'classification', data);
@@ -185,14 +185,14 @@ function connectDirectPusher() {
 }
 
 function connectSharedPusher() {
-  var worker = new SharedWorker('js/pusher-shared-worker.js');
+  const worker = new SharedWorker('js/pusher-shared-worker.js');
   worker.onerror = function (error) {
     console.warn('SharedWorker failed; using direct Pusher connection', error);
     connectDirectPusher();
   };
   worker.port.start();
   worker.port.onmessage = function (event) {
-    var payload = event.data || {};
+    const payload = event.data || {};
     handlePusherEvent(payload.channel, payload.event, payload.data);
   };
 }
@@ -210,15 +210,15 @@ if (typeof SharedWorker === 'function') {
 
 draw_circle = function(size, edit_color, label, image_url) {
   console.log(label);
-  var x = Math.random() * (window.innerWidth - size) + size;
-  var y = Math.random() * (window.innerHeight - size) + size;
+  const x = Math.random() * (window.innerWidth - size) + size;
+  const y = Math.random() * (window.innerHeight - size) + size;
 
-  var circle_group = svg.append('g')
+  const circle_group = svg.append('g')
     .attr('transform', 'translate(' + x + ', ' + y + ')')
     .attr('fill', edit_color)
     .style('opacity', 0.5)
 
-  var ring = circle_group.append('circle')
+  const ring = circle_group.append('circle')
     .attr({
       r: size + 20,
       stroke: 'none'
@@ -230,7 +230,7 @@ draw_circle = function(size, edit_color, label, image_url) {
     .duration(2500)
     .remove();
 
-  var circle = circle_group.append('circle')
+  const circle = circle_group.append('circle')
     .attr('r', size)
     .transition()
     .duration(5000)
@@ -244,7 +244,7 @@ draw_circle = function(size, edit_color, label, image_url) {
       image_url = image_url.replace('https://', '');
       image_url = image_url.replace('http://', '');
       image_url = image_url.replace('static.zooniverse.org/', '');
-      var image = circle_group.append('image')
+      circle_group.append('image')
         .attr('href', 'https://thumbnails.zooniverse.org/50x75/' + image_url)
         .attr('transform', 'translate(-25, -25)')
         .transition()
@@ -254,7 +254,7 @@ draw_circle = function(size, edit_color, label, image_url) {
     }
   
     if (label) {
-      var label = circle_group.append('text')
+      circle_group.append('text')
         .text(label)
         .classed('comment-body', true)
         .attr('text-anchor', 'middle')
