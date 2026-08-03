@@ -174,7 +174,8 @@ function handlePusherEvent(channel, event, data) {
   }
 }
 
-function connectDirectPusher() {
+async function connectDirectPusher() {
+  await import('/js/pusher.min.js');
   const pusher = new Pusher('79e8e05ea522377ba6db');
   const panoptes = pusher.subscribe('panoptes');
   const talk = pusher.subscribe('talk');
