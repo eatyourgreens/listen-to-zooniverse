@@ -32,21 +32,23 @@ function wrap(text, width) {
   });
 }
 
-var celesta = [];
-var clav = [];
-var swells = [];
+const celesta = [];
+const clav = [];
+const swells = [];
 
-var body_background_color = '#f8f8f8',
-  body_text_color = '#000',
-  svg_background_color = '#1c2733',
-  svg_text_color = '#fff',
-  newuser_box_color = 'rgb(41, 128, 185)',
-  bot_color = 'rgb(155, 89, 182)',
-  anon_color = 'rgb(46, 204, 113)',
-  edit_color = '#fff';
+const body_background_color = '#f8f8f8';
+const body_text_color = '#000';
+const svg_background_color = '#1c2733';
+const svg_text_color = '#fff';
+const newuser_box_color = 'rgb(41, 128, 185)';
+const bot_color = 'rgb(155, 89, 182)';
+const anon_color = 'rgb(46, 204, 113)';
+const edit_color = '#fff';
 
 let loaded_sounds = 0;
 const sound_totals = 51;
+let all_loaded = false;
+
 const sound_load = function(r) {
   loaded_sounds += 1
   if (loaded_sounds == sound_totals) {
@@ -60,6 +62,7 @@ const sound_load = function(r) {
 
 // load celesta and clav sounds
 for (let i = 1; i <= 24; i++) {
+  let fn;
   if (i > 9) {
     fn = 'c0' + i;
   } else {
@@ -208,7 +211,7 @@ if (typeof SharedWorker === 'function') {
   connectDirectPusher();
 }
 
-draw_circle = function(size, edit_color, label, image_url) {
+function draw_circle(size, edit_color, label, image_url) {
   console.log(label);
   const x = Math.random() * (window.innerWidth - size) + size;
   const y = Math.random() * (window.innerHeight - size) + size;
