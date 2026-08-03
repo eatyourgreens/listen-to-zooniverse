@@ -237,11 +237,15 @@ function connectDirectPusher() {
 
 function connectSharedPusher() {
   var worker = new SharedWorker('js/pusher-shared-worker.js');
+  worker.onerror = function (error) {
+    console.warn('SharedWorker failed; using direct Pusher connection', error);
+    connectDirectPusher();
+  };
   worker.port.start();
-  worker.port.addEventListener('message', function (event) {
+  worker.port.onmessage = function (event) {
     var payload = event.data || {};
     handlePusherEvent(payload.channel, payload.event, payload.data);
-  });
+  };
 }
 
 if (typeof SharedWorker === 'function') {

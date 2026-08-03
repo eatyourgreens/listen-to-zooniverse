@@ -1,4 +1,4 @@
-importScripts('https://js.pusher.com/3.1/pusher.min.js');
+importScripts('https://js.pusher.com/3.1/pusher.worker.js');
 
 var ports = [];
 var initialized = false;
