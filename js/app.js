@@ -209,6 +209,7 @@ if (typeof SharedWorker === 'function') {
     connectDirectPusher();
   }
 } else {
+  console.warn('SharedWorker not supported, using direct Pusher connection');
   connectDirectPusher();
 }
 
