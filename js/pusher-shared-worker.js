@@ -1,14 +1,4 @@
-const scriptPolicy = trustedTypes?.createPolicy(
-  'pusher-shared-worker', {
-    createScriptURL(url) {
-      return url;
-    }
-  }
-);
-const trustedScriptURL = scriptPolicy.createScriptURL(
-  'https://js.pusher.com/3.1/pusher.worker.js'
-);
-importScripts(trustedScriptURL);
+importScripts('js/pusher.worker.min.js');
 
 let ports = [];
 let initialized = false;
