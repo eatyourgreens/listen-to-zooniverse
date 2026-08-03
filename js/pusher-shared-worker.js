@@ -1,4 +1,14 @@
-importScripts('https://js.pusher.com/3.1/pusher.worker.js');
+const scriptPolicy = trustedTypes?.createPolicy(
+  'pusher-shared-worker', {
+    createScriptURL(url) {
+      return url;
+    }
+  }
+);
+const trustedScriptURL = scriptPolicy.createScriptURL(
+  'https://js.pusher.com/3.1/pusher.worker.js'
+);
+importScripts(trustedScriptURL);
 
 var ports = [];
 var initialized = false;
