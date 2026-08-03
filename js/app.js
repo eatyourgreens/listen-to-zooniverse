@@ -121,24 +121,6 @@ var panoptes_projects = {};
   })
 })();
 
-var ouroboros_projects = {};
-
-(function loadProjects() {
-  // List of identifiers to ignore (i.e. Not show)
-  ignore_these = ["m83", "impossible_line", "leaf", "cancer_gene_runner", "galaxy_zoo_starburst", "galaxy_zoo_quiz"]
-
-  // Get .ist of projects from API annd create items for display
-  var request = new XMLHttpRequest();
-  request.open('GET', "https://api.zooniverse.org/projects/list");
-  request.send();
-  request.onload = function (e) {
-    var projects = JSON.parse( this.responseText);
-    projects.forEach( function (project){
-      ouroboros_projects[project.name] = project.display_name;
-    });
-  };
-})();
-
 async function fetchProject(project_id) {
   const response = await fetch(`https://www.zooniverse.org/api/projects/${project_id}`, {
     headers: {
@@ -178,29 +160,7 @@ function onTalkComment(data) {
   var colour = data.project_id % 16777216;
   swells[index].play();
   draw_circle(10 + index * 10, '#' + colour.toString(16), data.body, '');
-  console.log("panoptes comment", data);
-}
-
-function onOuroborosClassification(data) {
-  var index = (data.project + data.subjects + data.user_name).length;
-  var red = data.project.length % 256;
-  var green = data.subjects.length % 256;
-  var blue = data.user_name.length % 256
-  index = index % (celesta.length - 1);
-
-  celesta[index].play();
-  draw_circle(index + 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), ouroboros_projects[data.project], '');
-  // console.log( "ouroboros classification", data );
-}
-
-function onOuroborosComment(data) {
-  var red = data.body.length % 256;
-  var green = data.zooniverse_id.length % 256;
-  var blue = data.user_zooniverse_id.length % 256;
-  var index = Math.round(Math.random() * (swells.length - 1));
-  swells[index].play();
-  draw_circle(10 + index * 10, '#' + red.toString(16) + green.toString(16) + blue.toString(16), data.body, '');
-  console.log("ouroboros comment", data);
+  console.log("Talk comment", data);
 }
 
 function handlePusherEvent(channel, event, data) {
@@ -208,17 +168,12 @@ function handlePusherEvent(channel, event, data) {
     onPanoptesClassification(data);
   } else if (channel === 'talk' && event === 'comment') {
     onTalkComment(data);
-  } else if (channel === 'ouroboros' && event === 'classification') {
-    onOuroborosClassification(data);
-  } else if (channel === 'ouroboros' && event === 'comment') {
-    onOuroborosComment(data);
   }
 }
 
 function connectDirectPusher() {
   var pusher = new Pusher('79e8e05ea522377ba6db');
   var panoptes = pusher.subscribe('panoptes');
-  var ouroboros = pusher.subscribe('ouroboros');
   var talk = pusher.subscribe('talk');
 
   panoptes.bind('classification', function (data) {
@@ -226,12 +181,6 @@ function connectDirectPusher() {
   });
   talk.bind('comment', function (data) {
     handlePusherEvent('talk', 'comment', data);
-  });
-  ouroboros.bind('classification', function (data) {
-    handlePusherEvent('ouroboros', 'classification', data);
-  });
-  ouroboros.bind('comment', function (data) {
-    handlePusherEvent('ouroboros', 'comment', data);
   });
 }
 

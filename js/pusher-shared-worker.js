@@ -33,7 +33,6 @@ function initializePusher() {
 
   var pusher = new Pusher('79e8e05ea522377ba6db');
   var panoptes = pusher.subscribe('panoptes');
-  var ouroboros = pusher.subscribe('ouroboros');
   var talk = pusher.subscribe('talk');
 
   panoptes.bind('classification', function (data) {
@@ -41,12 +40,6 @@ function initializePusher() {
   });
   talk.bind('comment', function (data) {
     broadcast('talk', 'comment', data);
-  });
-  ouroboros.bind('classification', function (data) {
-    broadcast('ouroboros', 'classification', data);
-  });
-  ouroboros.bind('comment', function (data) {
-    broadcast('ouroboros', 'comment', data);
   });
 }
 
