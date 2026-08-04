@@ -185,11 +185,11 @@ function connectSharedPusher() {
     console.warn('SharedWorker failed; using direct Pusher connection', error);
     connectDirectPusher();
   };
-  worker.port.start();
-  worker.port.onmessage = function (event) {
+  worker.port.addEventListener('message', function (event) {
     const payload = event.data || {};
     handlePusherEvent(payload.channel, payload.event, payload.data);
-  };
+  });
+  worker.port.start();
 }
 
 if (typeof SharedWorker === 'function') {
