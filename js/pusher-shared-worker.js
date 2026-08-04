@@ -1,26 +1,26 @@
 importScripts('/js/pusher.worker.min.js');
 
-let portRegister = [];
+let openTabs = [];
 let pusher = null;
 
-function hasVisiblePort() {
-  return portRegister.some(({ hidden }) => !hidden);
+function hasVisibleTab() {
+  return openTabs.some(({ hidden }) => !hidden);
 }
 
 function suspendPusher() {
-  if (pusher && !hasVisiblePort()) {
+  if (pusher && !hasVisibleTab()) {
     pusher.disconnect();
   }
 }
 
 function resumePusher() {
-  if (pusher && hasVisiblePort()) {
+  if (pusher && hasVisibleTab()) {
     pusher.connect();
   }
 }
 
 function broadcast(channel, event, data) {
-  portRegister = portRegister.filter(function ({ port }) {
+  openTabs = openTabs.filter(function ({ port }) {
     try {
       port.postMessage({
         channel: channel,
@@ -53,7 +53,7 @@ function initializePusher() {
 onconnect = function (event) {
   const port = event.ports[0];
   const entry = { port: port, hidden: true };
-  portRegister.push(entry);
+  openTabs.push(entry);
   port.start();
   port.onmessage = function (messageEvent) {
     const message = messageEvent.data || {};
