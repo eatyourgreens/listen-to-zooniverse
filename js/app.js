@@ -36,15 +36,6 @@ const celesta = [];
 const clav = [];
 const swells = [];
 
-const body_background_color = '#f8f8f8';
-const body_text_color = '#000';
-const svg_background_color = '#1c2733';
-const svg_text_color = '#fff';
-const newuser_box_color = 'rgb(41, 128, 185)';
-const bot_color = 'rgb(155, 89, 182)';
-const anon_color = 'rgb(46, 204, 113)';
-const edit_color = '#fff';
-
 let loaded_sounds = 0;
 const sound_totals = 51;
 let all_loaded = false;
