@@ -190,6 +190,16 @@ function connectSharedPusher() {
     handlePusherEvent(payload.channel, payload.event, payload.data);
   });
   worker.port.start();
+
+  function updateWorkerVisibility() {
+    worker.port.postMessage({
+      type: 'visibilitychange',
+      hidden: document.hidden
+    });
+  }
+
+  document.addEventListener('visibilitychange', updateWorkerVisibility);
+  updateWorkerVisibility();
 }
 
 if (typeof SharedWorker === 'function') {

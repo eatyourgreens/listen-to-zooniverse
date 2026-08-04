@@ -1,10 +1,26 @@
 importScripts('/js/pusher.worker.min.js');
 
-let ports = [];
-let initialized = false;
+let portRegister = [];
+let pusher = null;
+
+function hasVisiblePort() {
+  return portRegister.some(({ hidden }) => !hidden);
+}
+
+function suspendPusher() {
+  if (pusher && !hasVisiblePort()) {
+    pusher.disconnect();
+  }
+}
+
+function resumePusher() {
+  if (pusher && hasVisiblePort()) {
+    pusher.connect();
+  }
+}
 
 function broadcast(channel, event, data) {
-  ports = ports.filter(function (port) {
+  portRegister = portRegister.filter(function ({ port }) {
     try {
       port.postMessage({
         channel: channel,
@@ -20,10 +36,9 @@ function broadcast(channel, event, data) {
 }
 
 function initializePusher() {
-  if (initialized) return;
-  initialized = true;
+  if (pusher) return;
 
-  const pusher = new Pusher('79e8e05ea522377ba6db');
+  pusher = new Pusher('79e8e05ea522377ba6db');
   const panoptes = pusher.subscribe('panoptes');
   const talk = pusher.subscribe('talk');
 
@@ -37,7 +52,19 @@ function initializePusher() {
 
 onconnect = function (event) {
   const port = event.ports[0];
-  ports.push(port);
+  const entry = { port: port, hidden: true };
+  portRegister.push(entry);
   port.start();
+  port.onmessage = function (messageEvent) {
+    const message = messageEvent.data || {};
+    if (message.type === 'visibilitychange') {
+      entry.hidden = !!message.hidden;
+      if (entry.hidden) {
+        suspendPusher();
+      } else {
+        resumePusher();
+      }
+    }
+  };
   initializePusher();
 };
